@@ -1,3 +1,4 @@
+import { Link } from 'react-router-dom'
 import '../App.css'
 
 function Home() {
@@ -191,7 +192,7 @@ function Home() {
           <div className="footer-logo">후한의원 구미점</div>
           <div className="footer-details">
             <p>상호: 후한의원 구미점 | 주소: 경북 구미시 인동가산로 9-3, 4층 | TEL: 054-474-1075</p>
-            <p>© 2024 Hoo Clinic Gumi. All rights reserved.</p>
+            <p>© 2024 Hoo Clinic Gumi. <Link to="/admin" style={{ color: 'inherit', textDecoration: 'none', cursor: 'default' }}>All rights reserved.</Link></p>
           </div>
         </div>
       </footer>

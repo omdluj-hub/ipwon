@@ -11,11 +11,19 @@ interface Visit {
 type Period = 'daily' | 'weekly' | 'monthly' | 'all'
 
 function Admin() {
+  const [isAuthenticated, setIsAuthenticated] = useState(false)
+  const [password, setPassword] = useState('')
   const [allVisits, setAllVisits] = useState<Visit[]>([])
   const [filteredVisits, setFilteredVisits] = useState<Visit[]>([])
   const [period, setPeriod] = useState<Period>('all')
 
   useEffect(() => {
+    // Check if already authenticated in this session
+    const authStatus = sessionStorage.getItem('admin_auth')
+    if (authStatus === 'true') {
+      setIsAuthenticated(true)
+    }
+    
     const data = JSON.parse(localStorage.getItem('traffic_data') || '[]')
     setAllVisits(data)
     setFilteredVisits(data)
@@ -39,6 +47,16 @@ function Admin() {
     setFilteredVisits(filtered)
   }, [period, allVisits])
 
+  const handleLogin = (e: React.FormEvent) => {
+    e.preventDefault()
+    if (password === 'gnrnal1075') {
+      setIsAuthenticated(true)
+      sessionStorage.setItem('admin_auth', 'true')
+    } else {
+      alert('비밀번호가 틀렸습니다.')
+    }
+  }
+
   const getStats = () => {
     const stats: { [key: string]: number } = {}
     filteredVisits.forEach(v => {
@@ -61,6 +79,53 @@ function Admin() {
     weekly: '최근 7일',
     monthly: '최근 30일',
     all: '전체'
+  }
+
+  if (!isAuthenticated) {
+    return (
+      <div style={{ 
+        height: '100vh', 
+        display: 'flex', 
+        flexDirection: 'column', 
+        justifyContent: 'center', 
+        alignItems: 'center',
+        fontFamily: 'sans-serif' 
+      }}>
+        <form onSubmit={handleLogin} style={{ 
+          background: '#fff', 
+          padding: '40px', 
+          borderRadius: '12px', 
+          boxShadow: '0 4px 12px rgba(0,0,0,0.1)',
+          width: '320px'
+        }}>
+          <h2 style={{ marginBottom: '24px', textAlign: 'center' }}>관리자 로그인</h2>
+          <input 
+            type="password" 
+            placeholder="비밀번호를 입력하세요" 
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            style={{ 
+              width: '100%', 
+              padding: '12px', 
+              marginBottom: '16px', 
+              borderRadius: '6px', 
+              border: '1px solid #ddd',
+              boxSizing: 'border-box'
+            }}
+          />
+          <button type="submit" style={{ 
+            width: '100%', 
+            padding: '12px', 
+            background: '#007bff', 
+            color: '#fff', 
+            border: 'none', 
+            borderRadius: '6px',
+            cursor: 'pointer',
+            fontWeight: 'bold'
+          }}>로그인</button>
+        </form>
+      </div>
+    )
   }
 
   return (
