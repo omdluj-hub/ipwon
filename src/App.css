@@ -1,0 +1,399 @@
+/* --- Header Styles --- */
+.header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 80px;
+  background-color: rgba(255, 255, 255, 0.98);
+  box-shadow: 0 2px 15px rgba(0,0,0,0.08);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+}
+
+.header-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  display: flex;
+  flex-direction: column;
+}
+
+.logo-main {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--primary-color);
+  letter-spacing: -1px;
+}
+
+.logo-tag {
+  font-size: 0.8rem;
+  color: var(--text-light);
+  font-weight: 500;
+}
+
+.nav a {
+  margin: 0 15px;
+  color: var(--text-dark);
+  font-weight: 600;
+  text-decoration: none;
+  transition: color 0.3s;
+  font-size: 0.95rem;
+}
+
+.nav a:hover {
+  color: var(--primary-color);
+}
+
+.header-contact {
+  display: flex;
+  align-items: center;
+}
+
+/* --- Button Global Styles --- */
+.btn {
+  padding: 10px 20px;
+  border-radius: 4px;
+  font-weight: 700;
+  text-decoration: none;
+  transition: all 0.3s;
+  display: inline-block;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-call {
+  background-color: var(--primary-color);
+  color: var(--white);
+}
+
+.btn-accent {
+  background-color: var(--accent-color);
+  color: var(--white);
+}
+
+.btn-outline {
+  border: 2px solid var(--primary-color);
+  color: var(--primary-color);
+}
+
+.btn-lg {
+  padding: 16px 32px;
+  font-size: 1.1rem;
+  border-radius: 8px;
+}
+
+/* Kakao Button Styles */
+.btn-kakao {
+  background-color: #FEE500;
+  color: #191919;
+}
+
+.btn-kakao:hover {
+  background-color: #FADA0A;
+}
+
+.btn-kakao-sm {
+  background-color: #FEE500;
+  color: #191919;
+  font-size: 0.85rem;
+  padding: 8px 16px;
+  margin-right: 10px;
+}
+
+/* --- Hero Section --- */
+.hero {
+  padding-top: 160px;
+  padding-bottom: 80px;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  text-align: center;
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+}
+
+/* --- Facilities Gallery --- */
+.facilities {
+  background-color: white;
+}
+
+.gallery {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.gallery-item {
+  text-align: center;
+}
+
+.facility-img {
+  width: 100%;
+  height: 250px;
+  object-fit: cover;
+  border-radius: 12px;
+  box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+  margin-bottom: 15px;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item:hover .facility-img {
+  transform: scale(1.03);
+}
+
+.gallery-item p {
+  font-weight: 600;
+  color: var(--primary-color);
+}
+
+.hero-title {
+  font-size: 3.5rem;
+  line-height: 1.2;
+  margin-bottom: 25px;
+  color: #1a237e;
+}
+
+.hero-title .accent {
+  color: var(--accent-color);
+}
+
+.hero-sub {
+  font-size: 1.25rem;
+  color: var(--text-dark);
+  margin-bottom: 40px;
+  font-weight: 500;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+}
+
+/* --- Quick Info Bar --- */
+.quick-info {
+  background-color: #1a237e;
+  color: white;
+  padding: 20px 0;
+}
+
+.info-bar-inner {
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.info-item {
+  font-size: 1.05rem;
+}
+
+.info-item strong {
+  color: var(--accent-color);
+  margin-right: 8px;
+}
+
+/* --- Features Section --- */
+.features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 30px;
+}
+
+.feature-item {
+  background: white;
+  padding: 40px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  border: 1px solid #eee;
+  text-align: center;
+}
+
+.feature-icon {
+  font-size: 2.5rem;
+  margin-bottom: 20px;
+}
+
+.feature-item h3 {
+  margin-bottom: 15px;
+  font-size: 1.4rem;
+}
+
+/* --- Kakao CTA Section --- */
+.kakao-cta {
+  background-color: #f9f9f9;
+  padding: 60px 0;
+}
+
+.kakao-box {
+  background: white;
+  padding: 50px;
+  border-radius: 20px;
+  text-align: center;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.05);
+  border: 1px solid #FEE500;
+}
+
+.kakao-box h2 {
+  margin-bottom: 20px;
+  font-size: 2rem;
+}
+
+.kakao-box p {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+  color: var(--text-light);
+}
+
+/* --- Process Section --- */
+.process-steps {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 25px;
+}
+
+.step {
+  background: #fdfdfd;
+  padding: 30px;
+  border-radius: 8px;
+  position: relative;
+  border-top: 4px solid var(--primary-color);
+}
+
+.step-num {
+  font-size: 2rem;
+  font-weight: 900;
+  color: #eee;
+  position: absolute;
+  top: 10px;
+  right: 20px;
+}
+
+.step h4 {
+  margin-bottom: 10px;
+}
+
+/* --- Location Section --- */
+.bg-gray {
+  background-color: #f5f5f5;
+}
+
+.location-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 50px;
+  align-items: center;
+}
+
+.highlight-text {
+  color: #d32f2f;
+  font-weight: 700;
+  margin-top: 10px;
+}
+
+.map-area {
+  background-color: white;
+  padding: 10px;
+  border-radius: 12px;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+  overflow: hidden;
+}
+
+/* --- Floating Kakao Button --- */
+.floating-kakao {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 2000;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+}
+
+.kakao-icon-circle {
+  width: 60px;
+  height: 60px;
+  background-color: #FEE500;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 2rem;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+  transition: transform 0.3s;
+}
+
+.floating-kakao:hover .kakao-icon-circle {
+  transform: scale(1.1);
+}
+
+.tooltip {
+  background-color: #333;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  margin-right: 15px;
+  opacity: 0;
+  transition: opacity 0.3s;
+  pointer-events: none;
+}
+
+.floating-kakao:hover .tooltip {
+  opacity: 1;
+}
+
+/* --- Footer --- */
+.footer {
+  padding: 50px 0;
+  background-color: #212121;
+  color: #bdbdbd;
+}
+
+.footer-inner {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.footer-logo {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: white;
+}
+
+.footer-details p {
+  font-size: 0.85rem;
+  margin-bottom: 5px;
+}
+
+/* --- Responsive --- */
+@media (max-width: 992px) {
+  .hero-title { font-size: 2.5rem; }
+  .location-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .nav { display: none; }
+  .hero-actions { flex-direction: column; padding: 0 40px; }
+  .hero-title { font-size: 2rem; }
+  .footer-inner { flex-direction: column; gap: 30px; }
+  .header-contact .btn-kakao-sm {
+    display: none;
+  }
+  .floating-kakao {
+    bottom: 20px;
+    right: 20px;
+  }
+  .kakao-icon-circle {
+    width: 50px;
+    height: 50px;
+    font-size: 1.5rem;
+  }
+}

@@ -1,0 +1,139 @@
+import { useState, useEffect } from 'react'
+import '../App.css'
+
+interface Visit {
+  timestamp: string
+  referrer: string
+  utmSource: string
+  path: string
+}
+
+type Period = 'daily' | 'weekly' | 'monthly' | 'all'
+
+function Admin() {
+  const [allVisits, setAllVisits] = useState<Visit[]>([])
+  const [filteredVisits, setFilteredVisits] = useState<Visit[]>([])
+  const [period, setPeriod] = useState<Period>('all')
+
+  useEffect(() => {
+    const data = JSON.parse(localStorage.getItem('traffic_data') || '[]')
+    setAllVisits(data)
+    setFilteredVisits(data)
+  }, [])
+
+  useEffect(() => {
+    const now = new Date()
+    let filtered = [...allVisits]
+
+    if (period === 'daily') {
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate()).getTime()
+      filtered = allVisits.filter(v => new Date(v.timestamp).getTime() >= today)
+    } else if (period === 'weekly') {
+      const lastWeek = new Date(now.getTime() - 7 * 24 * 60 * 60 * 1000).getTime()
+      filtered = allVisits.filter(v => new Date(v.timestamp).getTime() >= lastWeek)
+    } else if (period === 'monthly') {
+      const lastMonth = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate()).getTime()
+      filtered = allVisits.filter(v => new Date(v.timestamp).getTime() >= lastMonth)
+    }
+
+    setFilteredVisits(filtered)
+  }, [period, allVisits])
+
+  const getStats = () => {
+    const stats: { [key: string]: number } = {}
+    filteredVisits.forEach(v => {
+      const source = v.utmSource !== 'None' ? `UTM: ${v.utmSource}` : v.referrer
+      stats[source] = (stats[source] || 0) + 1
+    })
+    return Object.entries(stats).sort((a, b) => b[1] - a[1])
+  }
+
+  const clearData = () => {
+    if (confirm('모든 방문 통계를 삭제하시겠습니까?')) {
+      localStorage.removeItem('traffic_data')
+      setAllVisits([])
+      setFilteredVisits([])
+    }
+  }
+
+  const periodLabels: Record<Period, string> = {
+    daily: '오늘',
+    weekly: '최근 7일',
+    monthly: '최근 30일',
+    all: '전체'
+  }
+
+  return (
+    <div className="admin-page" style={{ padding: '40px 20px', maxWidth: '1000px', margin: '0 auto', fontFamily: 'sans-serif' }}>
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
+        <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>관리자 대시보드</h1>
+        <button onClick={clearData} className="btn" style={{ backgroundColor: '#ff4d4d', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }}>통계 초기화</button>
+      </header>
+
+      <section className="stats-section" style={{ marginBottom: '60px' }}>
+        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
+          <h2 style={{ fontSize: '20px' }}>유입 경로 통계 ({periodLabels[period]})</h2>
+          <div style={{ display: 'flex', gap: '8px' }}>
+            {(['all', 'daily', 'weekly', 'monthly'] as Period[]).map((p) => (
+              <button
+                key={p}
+                onClick={() => setPeriod(p)}
+                style={{
+                  padding: '8px 16px',
+                  borderRadius: '20px',
+                  border: '1px solid #ddd',
+                  backgroundColor: period === p ? '#007bff' : '#fff',
+                  color: period === p ? '#fff' : '#333',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s'
+                }}
+              >
+                {periodLabels[p]}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        <div style={{ background: '#f8f9fa', padding: '24px', borderRadius: '12px', border: '1px solid #eee', boxShadow: '0 2px 4px rgba(0,0,0,0.05)' }}>
+          {getStats().map(([source, count]) => (
+            <div key={source} style={{ display: 'flex', justifyContent: 'space-between', padding: '14px 0', borderBottom: '1px solid #eee' }}>
+              <span style={{ fontWeight: 500, color: '#444' }}>{source}</span>
+              <span style={{ color: '#007bff', fontWeight: 'bold' }}>{count}회 방문</span>
+            </div>
+          ))}
+          {filteredVisits.length === 0 && <p style={{ textAlign: 'center', color: '#888', padding: '20px' }}>선택한 기간에 해당하는 데이터가 없습니다.</p>}
+        </div>
+      </section>
+
+      <section className="log-section">
+        <h2 style={{ fontSize: '20px', marginBottom: '20px' }}>최근 방문 로그 ({filteredVisits.length}건)</h2>
+        <div style={{ overflowX: 'auto', background: '#fff', borderRadius: '12px', border: '1px solid #eee' }}>
+          <table style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ backgroundColor: '#fcfcfc', borderBottom: '2px solid #eee' }}>
+                <th style={{ padding: '16px' }}>시간</th>
+                <th style={{ padding: '16px' }}>경로 (Referrer)</th>
+                <th style={{ padding: '16px' }}>UTM Source</th>
+              </tr>
+            </thead>
+            <tbody>
+              {[...filteredVisits].reverse().slice(0, 100).map((visit, index) => (
+                <tr key={index} style={{ borderBottom: '1px solid #f5f5f5' }}>
+                  <td style={{ padding: '14px 16px', fontSize: '14px', color: '#666' }}>{new Date(visit.timestamp).toLocaleString()}</td>
+                  <td style={{ padding: '14px 16px', fontSize: '14px', color: '#444' }}>{visit.referrer}</td>
+                  <td style={{ padding: '14px 16px', fontSize: '14px', color: '#444' }}>{visit.utmSource}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </section>
+      
+      <div style={{ marginTop: '40px', textAlign: 'center' }}>
+        <a href="/" style={{ color: '#007bff', textDecoration: 'none', fontSize: '14px' }}>← 홈페이지로 돌아가기</a>
+      </div>
+    </div>
+  )
+}
+
+export default Admin

@@ -1,0 +1,58 @@
+:root {
+  --primary-color: #1a237e; /* 신뢰감 있는 다크 네이비 (후한의원 메인컬러 스타일) */
+  --secondary-color: #f8f9fa; /* 밝고 깨끗한 배경 */
+  --accent-color: #c6a664; /* 골드/베이지 톤의 포인트 컬러 */
+  --text-dark: #212121;
+  --text-light: #757575;
+  --white: #ffffff;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+  color: var(--text-dark);
+  background-color: var(--secondary-color);
+  line-height: 1.6;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+}
+
+section {
+  padding: 80px 0;
+}
+
+h1, h2, h3 {
+  font-weight: 700;
+  color: var(--primary-color);
+}
+
+.section-title {
+  text-align: center;
+  font-size: 2.5rem;
+  margin-bottom: 50px;
+  position: relative;
+}
+
+.section-title::after {
+  content: '';
+  display: block;
+  width: 50px;
+  height: 3px;
+  background-color: var(--accent-color);
+  margin: 15px auto 0;
+}
+
+@media (max-width: 768px) {
+  .section-title {
+    font-size: 1.8rem;
+  }
+}
