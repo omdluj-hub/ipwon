@@ -38,7 +38,7 @@ function Home() {
             <div className="hero-actions">
               <a href="https://naver.me/5N15Owng" target="_blank" rel="noopener noreferrer" className="btn btn-outline btn-lg">{t('btn_reserve')}</a>
               <a href="https://pf.kakao.com/_JEGuu" target="_blank" rel="noopener noreferrer" className="btn btn-kakao btn-lg">{t('btn_kakao')}</a>
-              <a href="tel:054-474-1075" className="btn btn-accent btn-lg">전화하기</a>
+              <a href="tel:054-474-1075" className="btn btn-accent btn-lg">{t('btn_call_now')}</a>
             </div>
           </div>
         </div>
@@ -56,22 +56,22 @@ function Home() {
       {/* Features Section */}
       <section id="features" className="features">
         <div className="container">
-          <h2 className="section-title">후한의원 구미점만의 쾌적한 회복 시스템</h2>
+          <h2 className="section-title">{t('features_title')}</h2>
           <div className="features-grid">
             <div className="feature-item">
               <div className="feature-icon">🛌</div>
-              <h3>프라이빗 1인실 위주 구성</h3>
-              <p>다인실의 불편함 없이, 개인의 프라이버시가 보장되는 1인실 중심의 입원실에서 조용하고 편안한 회복을 돕습니다.</p>
+              <h3>{t('feature_1_title')}</h3>
+              <p>{t('feature_1_desc')}</p>
             </div>
             <div className="feature-item">
               <div className="feature-icon">🏥</div>
-              <h3>365일 끊김 없는 케어</h3>
-              <p>외래 휴진일(목, 일, 공휴일)과 관계없이 입원실은 365일 연중무휴로 운영되어 집중적인 통증 관리가 가능합니다.</p>
+              <h3>{t('feature_2_title')}</h3>
+              <p>{t('feature_2_desc')}</p>
             </div>
             <div className="feature-item">
               <div className="feature-icon">💆</div>
-              <h3>1:1 증상별 한방 집중 케어</h3>
-              <p>침, 약침, 추나요법 등 체계적인 한방 진료를 통해 사고 후유증의 빠른 회복과 안정을 돕습니다.</p>
+              <h3>{t('feature_3_title')}</h3>
+              <p>{t('feature_3_desc')}</p>
             </div>
           </div>
         </div>
@@ -80,19 +80,19 @@ function Home() {
       {/* Facilities Section */}
       <section id="facilities" className="facilities">
         <div className="container">
-          <h2 className="section-title">최상의 진료 환경</h2>
+          <h2 className="section-title">{t('facilities_title')}</h2>
           <div className="gallery">
             <div className="gallery-item">
               <img src="/image/KakaoTalk_20230131_100621199.jpg" alt="입원실" className="facility-img" />
-              <p>아늑하고 쾌적한 전용 입원실</p>
+              <p>{t('facility_1_name')}</p>
             </div>
             <div className="gallery-item">
               <img src="/image/KakaoTalk_20230131_100622250.jpg" alt="치료실" className="facility-img" />
-              <p>집중 케어를 위한 진료 공간</p>
+              <p>{t('facility_2_name')}</p>
             </div>
             <div className="gallery-item">
               <img src="/image/KakaoTalk_20230131_100623206.jpg" alt="한의원내부" className="facility-img" />
-              <p>편안한 대기 및 상담 공간</p>
+              <p>{t('facility_3_name')}</p>
             </div>
           </div>
         </div>
@@ -102,9 +102,9 @@ function Home() {
       <section className="kakao-cta">
         <div className="container">
           <div className="kakao-box">
-            <h2>전화가 부담스러우신가요?</h2>
-            <p>카카오톡으로 언제 어디서든 편하게 문의하세요. <br />친절하고 빠른 상담을 도와드립니다.</p>
-            <a href="https://pf.kakao.com/_JEGuu" target="_blank" rel="noopener noreferrer" className="btn btn-kakao btn-lg">후한의원 구미점 카톡 상담하기</a>
+            <h2>{t('kakao_cta_title')}</h2>
+            <p dangerouslySetInnerHTML={{ __html: t('kakao_cta_desc') }}></p>
+            <a href="https://pf.kakao.com/_JEGuu" target="_blank" rel="noopener noreferrer" className="btn btn-kakao btn-lg">{t('kakao_cta_btn')}</a>
           </div>
         </div>
       </section>
@@ -112,27 +112,27 @@ function Home() {
       {/* Process Section */}
       <section id="process" className="process">
         <div className="container">
-          <h2 className="section-title">간편한 교통사고 치료 절차</h2>
+          <h2 className="section-title">{t('process_title')}</h2>
           <div className="process-steps">
             <div className="step">
               <span className="step-num">01</span>
-              <h4>접수 및 보험 확인</h4>
-              <p>사고 접수번호와 담당자 연락처만 알려주시면 보험사 지불보증 절차를 저희가 진행합니다.</p>
+              <h4>{t('process_1_title')}</h4>
+              <p>{t('process_1_desc')}</p>
             </div>
             <div className="step">
               <span className="step-num">02</span>
-              <h4>원장님 1:1 정밀 진단</h4>
-              <p>환자분의 증상과 체질에 맞는 맞춤형 치료 계획을 수립합니다.</p>
+              <h4>{t('process_2_title')}</h4>
+              <p>{t('process_2_desc')}</p>
             </div>
             <div className="step">
               <span className="step-num">03</span>
-              <h4>집중 치료 및 입원</h4>
-              <p>쾌적한 1인실 환경에서 침, 약침, 추나 등 집중적인 회복 치료를 시작합니다.</p>
+              <h4>{t('process_3_title')}</h4>
+              <p>{t('process_3_desc')}</p>
             </div>
             <div className="step">
               <span className="step-num">04</span>
-              <h4>건강한 일상 복귀</h4>
-              <p>건강한 일상 복귀를 목표로 후유증 최소화를 위해 정성을 다해 케어합니다.</p>
+              <h4>{t('process_4_title')}</h4>
+              <p>{t('process_4_desc')}</p>
             </div>
           </div>
         </div>
@@ -143,24 +143,24 @@ function Home() {
         <div className="container">
           <div className="location-grid">
             <div className="location-info">
-              <h2 className="section-title align-left">오시는 길 및 진료 시간</h2>
+              <h2 className="section-title align-left">{t('location_title')}</h2>
               <div className="info-row">
-                <strong>📍 주소:</strong> 경북 구미시 인동가산로 9-3, 4층 (인동동)
+                <strong>📍 {t('addr_label')}:</strong> {t('addr_value')}
               </div>
               <div className="info-row">
-                <strong>📞 전화번호:</strong> 054-474-1075
+                <strong>📞 {t('phone_label')}:</strong> 054-474-1075
               </div>
               <div className="info-row">
-                <strong>⏰ 진료 시간 (외래):</strong> 
-                <p>• 월/화/수/금: 10:30 ~ 20:30 (야간진료)</p>
-                <p>• 토요일: 10:00 ~ 14:00 (점심시간 없음)</p>
-                <p>• 점심시간: 13:00 ~ 14:00 (평일)</p>
-                <p>• 휴진: 매주 목요일, 일요일, 공휴일</p>
-                <p className="highlight-text">* 입원실은 365일 연중무휴 운영됩니다.</p>
+                <strong>⏰ {t('hours_label')}:</strong> 
+                <p>{t('hours_1')}</p>
+                <p>{t('hours_2')}</p>
+                <p>{t('hours_3')}</p>
+                <p>{t('hours_4')}</p>
+                <p className="highlight-text">{t('hours_note')}</p>
               </div>
               <div className="info-row">
-                <strong>🚗 주차 안내:</strong>
-                <p>건물 내 타워 주차장 무료 이용 가능 (주차 불가 시 인근 사설 주차장 지원)</p>
+                <strong>🚗 {t('parking_label')}:</strong>
+                <p>{t('parking_desc')}</p>
               </div>
             </div>
             <div className="map-area">
@@ -180,16 +180,16 @@ function Home() {
 
       {/* Floating Kakao Button */}
       <a href="https://pf.kakao.com/_JEGuu" target="_blank" rel="noopener noreferrer" className="floating-kakao">
-        <span className="tooltip">카톡 상담</span>
+        <span className="tooltip">{t('btn_kakao')}</span>
         <div className="kakao-icon-circle">💬</div>
       </a>
 
       {/* Footer */}
       <footer className="footer">
         <div className="container footer-inner">
-          <div className="footer-logo">후한의원 구미점</div>
+          <div className="footer-logo">{t('hospital_name')}</div>
           <div className="footer-details">
-            <p>상호: 후한의원 구미점 | 주소: 경북 구미시 인동가산로 9-3, 4층 | TEL: 054-474-1075</p>
+            <p>{t('footer_info')}</p>
             <p>© 2024 Hoo Clinic Gumi. <Link to="/admin" style={{ color: 'inherit', textDecoration: 'none', cursor: 'default' }}>All rights reserved.</Link></p>
           </div>
         </div>
