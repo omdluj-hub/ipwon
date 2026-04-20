@@ -18,7 +18,8 @@ function App() {
           timestamp: new Date().toISOString(),
           referrer,
           utmSource,
-          path: location.pathname
+          path: location.pathname,
+          userAgent: navigator.userAgent
         }
         
         try {

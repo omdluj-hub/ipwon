@@ -6,6 +6,34 @@ interface Visit {
   referrer: string
   utmSource: string
   path: string
+  userAgent?: string
+}
+
+const getBotInfo = (ua?: string) => {
+  if (!ua) return { name: 'Unknown', isBot: false }
+  
+  const bots = [
+    { name: 'ChatGPT (GPTBot)', pattern: /GPTBot/i },
+    { name: 'Google Bot', pattern: /Googlebot/i },
+    { name: 'Bing Bot', pattern: /Bingbot/i },
+    { name: 'Naver Yeti', pattern: /Yeti/i },
+    { name: 'Claude Bot', pattern: /ClaudeBot/i },
+    { name: 'Gemini/Google', pattern: /Mediapartners-Google/i },
+    { name: 'Pinterest', pattern: /Pinterest/i },
+    { name: 'Facebook', pattern: /facebookexternalhit/i }
+  ]
+
+  for (const bot of bots) {
+    if (bot.pattern.test(ua)) return { name: bot.name, isBot: true }
+  }
+
+  if (/bot|crawler|spider|crawling/i.test(ua)) return { name: 'Generic Bot', isBot: true }
+  if (/iPhone|iPad|iPod/i.test(ua)) return { name: 'iOS Device', isBot: false }
+  if (/Android/i.test(ua)) return { name: 'Android Device', isBot: false }
+  if (/Macintosh/i.test(ua)) return { name: 'Mac', isBot: false }
+  if (/Windows/i.test(ua)) return { name: 'Windows PC', isBot: false }
+
+  return { name: 'Other Device', isBot: false }
 }
 
 type Period = 'daily' | 'weekly' | 'monthly' | 'all'
@@ -192,16 +220,26 @@ function Admin() {
                 <th style={{ padding: '16px' }}>시간</th>
                 <th style={{ padding: '16px' }}>경로 (Referrer)</th>
                 <th style={{ padding: '16px' }}>UTM Source</th>
+                <th style={{ padding: '16px' }}>기기/봇</th>
               </tr>
             </thead>
             <tbody>
-              {[...filteredVisits].reverse().slice(0, 100).map((visit, index) => (
-                <tr key={index} style={{ borderBottom: '1px solid #f5f5f5' }}>
-                  <td style={{ padding: '14px 16px', fontSize: '14px', color: '#666' }}>{new Date(visit.timestamp).toLocaleString()}</td>
-                  <td style={{ padding: '14px 16px', fontSize: '14px', color: '#444' }}>{visit.referrer}</td>
-                  <td style={{ padding: '14px 16px', fontSize: '14px', color: '#444' }}>{visit.utmSource}</td>
-                </tr>
-              ))}
+              {[...filteredVisits].reverse().slice(0, 100).map((visit, index) => {
+                const botInfo = getBotInfo(visit.userAgent)
+                return (
+                  <tr key={index} style={{ 
+                    borderBottom: '1px solid #f5f5f5',
+                    backgroundColor: botInfo.isBot ? '#f0f7ff' : 'transparent'
+                  }}>
+                    <td style={{ padding: '14px 16px', fontSize: '14px', color: '#666' }}>{new Date(visit.timestamp).toLocaleString()}</td>
+                    <td style={{ padding: '14px 16px', fontSize: '14px', color: '#444' }}>{visit.referrer}</td>
+                    <td style={{ padding: '14px 16px', fontSize: '14px', color: '#444' }}>{visit.utmSource}</td>
+                    <td style={{ padding: '14px 16px', fontSize: '14px', color: botInfo.isBot ? '#007bff' : '#444', fontWeight: botInfo.isBot ? 'bold' : 'normal' }}>
+                      {botInfo.name}
+                    </td>
+                  </tr>
+                )
+              })}
             </tbody>
           </table>
         </div>

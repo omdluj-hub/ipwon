@@ -19,6 +19,45 @@
     <!-- Naver Search Advisor / Google Search Console -->
     <meta name="naver-site-verification" content="56cf05e290871e6ca0b8837a16482ff5b0ae1cef" />
     <meta name="google-site-verification" content="w5NQ-WHd-o_hcKnF8bJoc-WAOklZtZcNapkaNAwDm6A" />
+
+    <!-- Structured Data for AI & Search Engines -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "MedicalClinic",
+      "name": "후한의원 구미점",
+      "alternateName": "구미 입원실 한의원",
+      "description": "구미 교통사고 입원실 1인실 365일 운영 한의원. 쾌적한 환경에서 교통사고 후유증 치료를 받으세요.",
+      "url": "https://ipwon-omdluj-hubs-projects.vercel.app/",
+      "telephone": "054-476-1075",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "인동북길 59",
+        "addressLocality": "구미시",
+        "addressRegion": "경상북도",
+        "postalCode": "39200",
+        "addressCountry": "KR"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": 36.1082,
+        "longitude": 128.4235
+      },
+      "openingHoursSpecification": [
+        {
+          "@type": "OpeningHoursSpecification",
+          "dayOfWeek": ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"],
+          "opens": "00:00",
+          "closes": "23:59"
+        }
+      ],
+      "medicalSpecialty": "Hospital",
+      "availableService": {
+        "@type": "MedicalTest",
+        "name": "교통사고 후유증 치료, 입원실 운영"
+      }
+    }
+    </script>
   </head>
   <body>
     <div id="root"></div>
