@@ -17,6 +17,17 @@ function Admin() {
   const [filteredVisits, setFilteredVisits] = useState<Visit[]>([])
   const [period, setPeriod] = useState<Period>('all')
 
+  const fetchData = async () => {
+    try {
+      const response = await fetch('/api/track')
+      const data = await response.json()
+      setAllVisits(data)
+      setFilteredVisits(data)
+    } catch (error) {
+      console.error('Failed to fetch stats:', error)
+    }
+  }
+
   useEffect(() => {
     // Check if already authenticated in this session
     const authStatus = sessionStorage.getItem('admin_auth')
@@ -24,9 +35,7 @@ function Admin() {
       setIsAuthenticated(true)
     }
     
-    const data = JSON.parse(localStorage.getItem('traffic_data') || '[]')
-    setAllVisits(data)
-    setFilteredVisits(data)
+    fetchData()
   }, [])
 
   useEffect(() => {
@@ -66,11 +75,15 @@ function Admin() {
     return Object.entries(stats).sort((a, b) => b[1] - a[1])
   }
 
-  const clearData = () => {
-    if (confirm('모든 방문 통계를 삭제하시겠습니까?')) {
-      localStorage.removeItem('traffic_data')
-      setAllVisits([])
-      setFilteredVisits([])
+  const clearData = async () => {
+    if (confirm('모든 방문 통계를 서버에서 삭제하시겠습니까?')) {
+      try {
+        await fetch('/api/track', { method: 'DELETE' })
+        setAllVisits([])
+        setFilteredVisits([])
+      } catch (error) {
+        console.error('Failed to clear data:', error)
+      }
     }
   }
 

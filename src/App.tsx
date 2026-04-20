@@ -7,10 +7,9 @@ function App() {
   const location = useLocation()
 
   useEffect(() => {
-    // Traffic tracking logic (for demonstration using localStorage)
+    // Traffic tracking logic (using Vercel KV via serverless function)
     if (location.pathname === '/') {
-      const trackVisit = () => {
-        const visits = JSON.parse(localStorage.getItem('traffic_data') || '[]')
+      const trackVisit = async () => {
         const referrer = document.referrer || 'Direct'
         const urlParams = new URLSearchParams(window.location.search)
         const utmSource = urlParams.get('utm_source') || 'None'
@@ -22,10 +21,15 @@ function App() {
           path: location.pathname
         }
         
-        visits.push(newVisit)
-        // Keep only last 1000 visits to avoid filling localStorage
-        if (visits.length > 1000) visits.shift()
-        localStorage.setItem('traffic_data', JSON.stringify(visits))
+        try {
+          await fetch('/api/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newVisit)
+          });
+        } catch (error) {
+          console.error('Failed to track visit:', error);
+        }
       }
       
       trackVisit()
