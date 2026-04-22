@@ -218,8 +218,9 @@ function Admin() {
             <thead>
               <tr style={{ backgroundColor: '#fcfcfc', borderBottom: '2px solid #eee' }}>
                 <th style={{ padding: '16px' }}>시간</th>
-                <th style={{ padding: '16px' }}>경로 (Referrer)</th>
-                <th style={{ padding: '16px' }}>UTM Source</th>
+                <th style={{ padding: '16px' }}>경로 (Path)</th>
+                <th style={{ padding: '16px' }}>유입 (Referrer)</th>
+                <th style={{ padding: '16px' }}>UTM</th>
                 <th style={{ padding: '16px' }}>기기/봇</th>
               </tr>
             </thead>
@@ -232,6 +233,7 @@ function Admin() {
                     backgroundColor: botInfo.isBot ? '#f0f7ff' : 'transparent'
                   }}>
                     <td style={{ padding: '14px 16px', fontSize: '14px', color: '#666' }}>{new Date(visit.timestamp).toLocaleString()}</td>
+                    <td style={{ padding: '14px 16px', fontSize: '14px', color: '#007bff', fontWeight: 'bold' }}>{visit.path || '/'}</td>
                     <td style={{ padding: '14px 16px', fontSize: '14px', color: '#444' }}>{visit.referrer}</td>
                     <td style={{ padding: '14px 16px', fontSize: '14px', color: '#444' }}>{visit.utmSource}</td>
                     <td style={{ padding: '14px 16px', fontSize: '14px', color: botInfo.isBot ? '#007bff' : '#444', fontWeight: botInfo.isBot ? 'bold' : 'normal' }}>

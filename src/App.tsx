@@ -7,34 +7,37 @@ function App() {
   const location = useLocation()
 
   useEffect(() => {
-    // Traffic tracking logic (using Vercel KV via serverless function)
-    if (location.pathname === '/') {
-      const trackVisit = async () => {
-        const referrer = document.referrer || 'Direct'
-        const urlParams = new URLSearchParams(window.location.search)
-        const utmSource = urlParams.get('utm_source') || 'None'
-        
-        const newVisit = {
-          timestamp: new Date().toISOString(),
-          referrer,
-          utmSource,
-          path: location.pathname,
-          userAgent: navigator.userAgent
-        }
-        
-        try {
-          await fetch('/api/track', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(newVisit)
-          });
-        } catch (error) {
-          console.error('Failed to track visit:', error);
-        }
+    // Traffic tracking logic
+    const trackVisit = async () => {
+      // Don't track if user is already authenticated as admin
+      if (sessionStorage.getItem('admin_auth') === 'true') {
+        return
       }
       
-      trackVisit()
+      const referrer = document.referrer || 'Direct'
+      const urlParams = new URLSearchParams(window.location.search)
+      const utmSource = urlParams.get('utm_source') || 'None'
+      
+      const newVisit = {
+        timestamp: new Date().toISOString(),
+        referrer,
+        utmSource,
+        path: location.pathname,
+        userAgent: navigator.userAgent
+      }
+      
+      try {
+        await fetch('/api/track', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newVisit)
+        });
+      } catch (error) {
+        console.error('Failed to track visit:', error);
+      }
     }
+    
+    trackVisit()
   }, [location.pathname])
 
   return (
