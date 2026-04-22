@@ -1,30 +1,30 @@
 import { createClient } from '@vercel/kv';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
-// Create a custom KV client that checks for both possible env var names
-const kv = createClient({
-  url: process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL,
-  token: process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN,
-});
-
 export default async function handler(req: VercelRequest, res: VercelResponse) {
   // Check for environment variables
+  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+
   const envCheck = {
-    KV_URL: !!process.env.KV_REST_API_URL,
-    KV_TOKEN: !!process.env.KV_REST_API_TOKEN,
-    UPSTASH_URL: !!process.env.UPSTASH_REDIS_REST_URL,
-    UPSTASH_TOKEN: !!process.env.UPSTASH_REDIS_REST_TOKEN,
+    urlExists: !!url,
+    tokenExists: !!token,
+    names: {
+      KV_URL: !!process.env.KV_REST_API_URL,
+      UPSTASH_URL: !!process.env.UPSTASH_REDIS_REST_URL
+    }
   };
 
-  try {
-    const hasConfig = (envCheck.KV_URL && envCheck.KV_TOKEN) || (envCheck.UPSTASH_URL && envCheck.UPSTASH_TOKEN);
+  if (!url || !token) {
+    return res.status(500).json({ 
+      error: 'Environment variables missing', 
+      details: 'Check Vercel Dashboard > Settings > Environment Variables',
+      envCheck 
+    });
+  }
 
-    if (!hasConfig) {
-      return res.status(500).json({ 
-        error: 'Redis configuration missing. Please connect KV or Redis in Vercel dashboard.', 
-        envCheck 
-      });
-    }
+  try {
+    const kv = createClient({ url, token });
 
     if (req.method === 'POST') {
       const { referrer, utmSource, timestamp, path, userAgent } = req.body;
@@ -45,7 +45,9 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
     if (req.method === 'GET') {
       const visits = await kv.lrange('visits', 0, -1);
-      const parsedVisits = visits.map(v => typeof v === 'string' ? JSON.parse(v) : v);
+      const parsedVisits = Array.isArray(visits) 
+        ? visits.map(v => typeof v === 'string' ? JSON.parse(v) : v)
+        : [];
       return res.status(200).json(parsedVisits);
     }
 
@@ -57,7 +59,7 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(405).json({ error: 'Method not allowed' });
   } catch (error: any) {
     return res.status(500).json({ 
-      error: 'Redis/KV Operation Failed', 
+      error: 'Redis Operation Error', 
       message: error.message,
       envCheck 
     });

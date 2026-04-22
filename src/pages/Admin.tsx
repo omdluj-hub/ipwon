@@ -58,7 +58,7 @@ function Admin() {
         setFilteredVisits(data)
         console.log('Successfully set visits:', data.length)
       } else {
-        console.error('API error (non-array):', data)
+        console.error('API error (non-array):', data.error || 'Unknown error', data.message || '', data)
         setAllVisits([])
         setFilteredVisits([])
       }
