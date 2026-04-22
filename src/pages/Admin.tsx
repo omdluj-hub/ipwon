@@ -49,8 +49,17 @@ function Admin() {
     try {
       const response = await fetch('/api/track')
       const data = await response.json()
-      setAllVisits(data)
-      setFilteredVisits(data)
+      
+      if (Array.isArray(data)) {
+        setAllVisits(data)
+        setFilteredVisits(data)
+        console.log('Successfully fetched visits:', data.length)
+      } else {
+        console.error('API returned an error or non-array:', data)
+        // Show an empty list if there's an error to avoid crashing
+        setAllVisits([])
+        setFilteredVisits([])
+      }
     } catch (error) {
       console.error('Failed to fetch stats:', error)
     }
