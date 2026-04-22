@@ -2,23 +2,30 @@ import { createClient } from '@vercel/kv';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Check for environment variables
-  const url = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
-  const token = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
+  // Check for all possible environment variable names
+  const url = process.env.KV_REST_API_URL || 
+              process.env.UPSTASH_REDIS_REST_URL || 
+              process.env.REDIS_URL;
+              
+  const token = process.env.KV_REST_API_TOKEN || 
+                process.env.UPSTASH_REDIS_REST_TOKEN || 
+                process.env.REDIS_TOKEN || 
+                ""; // Default to empty if not found
 
   const envCheck = {
-    urlExists: !!url,
-    tokenExists: !!token,
-    names: {
-      KV_URL: !!process.env.KV_REST_API_URL,
-      UPSTASH_URL: !!process.env.UPSTASH_REDIS_REST_URL
+    urlFound: !!url,
+    tokenFound: !!token,
+    detectedNames: {
+      KV: !!process.env.KV_REST_API_URL,
+      UPSTASH: !!process.env.UPSTASH_REDIS_REST_URL,
+      REDIS: !!process.env.REDIS_URL
     }
   };
 
-  if (!url || !token) {
+  if (!url) {
     return res.status(500).json({ 
-      error: 'Environment variables missing', 
-      details: 'Check Vercel Dashboard > Settings > Environment Variables',
+      error: 'Redis URL missing', 
+      details: 'Please ensure REDIS_URL or KV_REST_API_URL is set in Vercel.',
       envCheck 
     });
   }
