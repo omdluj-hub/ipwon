@@ -9,8 +9,11 @@ function App() {
   useEffect(() => {
     // Traffic tracking logic
     const trackVisit = async () => {
+      console.log('Attempting to track visit for path:', location.pathname)
+      
       // Don't track if user is already authenticated as admin
       if (sessionStorage.getItem('admin_auth') === 'true') {
+        console.log('Skipping track: Admin user detected')
         return
       }
       
@@ -27,13 +30,15 @@ function App() {
       }
       
       try {
-        await fetch('/api/track', {
+        const response = await fetch('/api/track', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(newVisit)
         });
+        const result = await response.json();
+        console.log('Tracking response:', response.status, result);
       } catch (error) {
-        console.error('Failed to track visit:', error);
+        console.error('Tracking request failed:', error);
       }
     }
     
