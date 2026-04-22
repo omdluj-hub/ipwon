@@ -1,38 +1,21 @@
-import { createClient } from '@vercel/kv';
+import Redis from 'ioredis';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
-  // Check for all possible environment variable names
-  const url = process.env.KV_REST_API_URL || 
-              process.env.UPSTASH_REDIS_REST_URL || 
-              process.env.REDIS_URL;
-              
-  const token = process.env.KV_REST_API_TOKEN || 
-                process.env.UPSTASH_REDIS_REST_TOKEN || 
-                process.env.REDIS_TOKEN || 
-                ""; // Default to empty if not found
+  // Check for Redis URL
+  const redisUrl = process.env.REDIS_URL || process.env.KV_URL || process.env.UPSTASH_REDIS_REST_URL;
 
-  const envCheck = {
-    urlFound: !!url,
-    tokenFound: !!token,
-    detectedNames: {
-      KV: !!process.env.KV_REST_API_URL,
-      UPSTASH: !!process.env.UPSTASH_REDIS_REST_URL,
-      REDIS: !!process.env.REDIS_URL
-    }
-  };
-
-  if (!url) {
+  if (!redisUrl) {
     return res.status(500).json({ 
-      error: 'Redis URL missing', 
-      details: 'Please ensure REDIS_URL or KV_REST_API_URL is set in Vercel.',
-      envCheck 
+      error: 'Redis connection URL missing', 
+      details: 'Please ensure REDIS_URL is set in Vercel Environment Variables.'
     });
   }
 
-  try {
-    const kv = createClient({ url, token });
+  // Create a Redis client (handle both standard redis:// and secure rediss://)
+  const redis = new Redis(redisUrl);
 
+  try {
     if (req.method === 'POST') {
       const { referrer, utmSource, timestamp, path, userAgent } = req.body;
       const headerUserAgent = req.headers['user-agent'] || userAgent || 'Unknown';
@@ -45,30 +28,35 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         userAgent: headerUserAgent 
       };
       
-      await kv.lpush('visits', JSON.stringify(visit));
-      await kv.ltrim('visits', 0, 999);
+      // LPUSH to 'visits' list
+      await redis.lpush('visits', JSON.stringify(visit));
+      // Keep only last 1000 items
+      await redis.ltrim('visits', 0, 999);
+      
       return res.status(200).json({ success: true });
     }
 
     if (req.method === 'GET') {
-      const visits = await kv.lrange('visits', 0, -1);
-      const parsedVisits = Array.isArray(visits) 
-        ? visits.map(v => typeof v === 'string' ? JSON.parse(v) : v)
-        : [];
+      // LRANGE 0 -1 to get all items
+      const visits = await redis.lrange('visits', 0, -1);
+      const parsedVisits = visits.map(v => JSON.parse(v));
       return res.status(200).json(parsedVisits);
     }
 
     if (req.method === 'DELETE') {
-      await kv.del('visits');
+      await redis.del('visits');
       return res.status(200).json({ success: true });
     }
     
     return res.status(405).json({ error: 'Method not allowed' });
   } catch (error: any) {
+    console.error('Redis Operation Error:', error);
     return res.status(500).json({ 
       error: 'Redis Operation Error', 
-      message: error.message,
-      envCheck 
+      message: error.message 
     });
+  } finally {
+    // Ensure the connection is closed after each request to avoid hitting connection limits
+    await redis.quit();
   }
 }
