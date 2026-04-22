@@ -46,17 +46,13 @@ function Admin() {
   const [period, setPeriod] = useState<Period>('all')
 
   const fetchData = async () => {
-    console.log('Fetching visit data from API...')
     try {
       const response = await fetch('/api/track')
-      console.log('Fetch response status:', response.status)
       const data = await response.json()
-      console.log('Received raw data:', data)
       
       if (Array.isArray(data)) {
         setAllVisits(data)
         setFilteredVisits(data)
-        console.log('Successfully set visits:', data.length)
       } else {
         console.error('API error (non-array):', data.error || 'Unknown error', data.message || '', data)
         setAllVisits([])
