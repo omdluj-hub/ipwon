@@ -190,7 +190,7 @@ function Home() {
           <div className="footer-logo">{t('hospital_name')}</div>
           <div className="footer-details">
             <p>{t('footer_info')}</p>
-            <p>© 2024 Hoo Clinic Gumi. <Link to="/admin" style={{ color: 'inherit', textDecoration: 'none', cursor: 'default' }}>All rights reserved.</Link></p>
+            <p>© 2024 Hoo Clinic Gumi. <Link to="/admin" style={{ color: 'inherit', textDecoration: 'none', cursor: 'default' }}>All rights reserved.</Link> | <Link to="/for-ai" style={{ color: '#888', textDecoration: 'none', fontSize: '11px' }}>For AI</Link></p>
           </div>
         </div>
       </footer>

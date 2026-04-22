@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { Routes, Route, useLocation } from 'react-router-dom'
 import Home from './pages/Home'
 import Admin from './pages/Admin'
+import ForAI from './pages/ForAI'
 
 function App() {
   const location = useLocation()
@@ -44,6 +45,7 @@ function App() {
     <Routes>
       <Route path="/" element={<Home />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/for-ai" element={<ForAI />} />
     </Routes>
   )
 }
