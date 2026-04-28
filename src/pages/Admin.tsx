@@ -45,9 +45,11 @@ function Admin() {
   const [allVisits, setAllVisits] = useState<Visit[]>([])
   const [filteredVisits, setFilteredVisits] = useState<Visit[]>([])
   const [period, setPeriod] = useState<Period>('all')
+  const [error, setError] = useState<string | null>(null)
 
   const fetchData = async () => {
     try {
+      setError(null)
       const response = await fetch('/api/track')
       const data = await response.json()
       
@@ -55,12 +57,15 @@ function Admin() {
         setAllVisits(data)
         setFilteredVisits(data)
       } else {
-        console.error('API error (non-array):', data.error || 'Unknown error', data.message || '', data)
+        const errorMsg = `API Error: ${data.error || 'Unknown'}${data.message ? ` - ${data.message}` : ''}`
+        console.error('API error (non-array):', data)
+        setError(errorMsg)
         setAllVisits([])
         setFilteredVisits([])
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Fetch request failed:', error)
+      setError(`Fetch failed: ${error.message}`)
     }
   }
 
@@ -181,8 +186,25 @@ function Admin() {
     <div className="admin-page" style={{ padding: '40px 20px', maxWidth: '1000px', margin: '0 auto', fontFamily: 'sans-serif' }}>
       <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '40px' }}>
         <h1 style={{ fontSize: '24px', fontWeight: 'bold' }}>관리자 대시보드</h1>
-        <button onClick={clearData} className="btn" style={{ backgroundColor: '#ff4d4d', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }}>통계 초기화</button>
+        <div style={{ display: 'flex', gap: '10px' }}>
+          <button onClick={fetchData} className="btn" style={{ backgroundColor: '#6c757d', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }}>새로고침</button>
+          <button onClick={clearData} className="btn" style={{ backgroundColor: '#ff4d4d', color: '#fff', border: 'none', padding: '10px 20px', borderRadius: '8px', cursor: 'pointer' }}>통계 초기화</button>
+        </div>
       </header>
+
+      {error && (
+        <div style={{ 
+          backgroundColor: '#fff1f0', 
+          border: '1px solid #ffa39e', 
+          padding: '16px', 
+          borderRadius: '8px', 
+          marginBottom: '30px',
+          color: '#cf1322',
+          fontSize: '14px'
+        }}>
+          <strong>오류 발생:</strong> {error}
+        </div>
+      )}
 
       <section className="stats-section" style={{ marginBottom: '60px' }}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px' }}>
