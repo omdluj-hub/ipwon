@@ -24,21 +24,36 @@ function App() {
         isAdmin
       }
       
-      try {
-        const response = await fetch('/api/track', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newVisit)
-        });
-        const result = await response.json();
-        if (response.ok) {
-          console.log('Tracking success:', result);
-        } else {
-          console.error('Tracking server error:', result);
+      // Send to both endpoints
+      const trackLocal = async () => {
+        try {
+          const response = await fetch('/api/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(newVisit)
+          });
+          const result = await response.json();
+          if (response.ok) console.log('Local tracking success:', result);
+        } catch (error) {
+          console.error('Local tracking failed:', error);
         }
-      } catch (error) {
-        console.error('Tracking request failed (network error):', error);
-      }
+      };
+
+      const trackExternal = async () => {
+        try {
+          const response = await fetch('https://adminpage-xi.vercel.app/api/track', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ ...newVisit, site_id: 'ipwon' })
+          });
+          if (response.ok) console.log('External tracking success');
+        } catch (error) {
+          console.error('External tracking failed:', error);
+        }
+      };
+
+      trackLocal();
+      trackExternal();
     }
     
     trackVisit()
