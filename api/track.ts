@@ -2,11 +2,25 @@ import Redis from 'ioredis';
 import { VercelRequest, VercelResponse } from '@vercel/node';
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Prevent caching of API responses
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Pragma', 'no-cache');
+  res.setHeader('Expires', '0');
+
   const redisUrl = process.env.REDIS_URL || process.env.KV_URL || process.env.UPSTASH_REDIS_REST_URL;
 
   if (!redisUrl) {
     console.error('Missing Redis URL environment variable');
-    return res.status(500).json({ error: 'Redis connection URL missing' });
+    return res.status(500).json({ error: 'Redis connection URL missing', detail: 'Environment variables not found' });
+  }
+
+  // Check if URL is for REST API instead of Redis protocol
+  if (redisUrl.startsWith('http')) {
+    console.error('Wrong Redis URL format: ioredis requires redis:// or rediss:// protocol');
+    return res.status(500).json({ 
+      error: 'Invalid Redis URL format', 
+      detail: 'The provided URL is for REST API (http). ioredis requires redis:// protocol.' 
+    });
   }
 
   const redis = new Redis(redisUrl);
@@ -14,21 +28,21 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
   try {
     if (req.method === 'POST') {
       const { referrer, utmSource, timestamp, path, userAgent, isAdmin } = req.body;
-      const headerUserAgent = req.headers['user-agent'] || userAgent || 'Unknown';
       
       const visit = { 
         referrer: referrer || 'Direct', 
         utmSource: utmSource || 'None', 
         timestamp: timestamp || new Date().toISOString(), 
         path: path || '/', 
-        userAgent: headerUserAgent,
+        userAgent: req.headers['user-agent'] || userAgent || 'Unknown',
         isAdmin: !!isAdmin
       };
       
-      await redis.lpush('visits', JSON.stringify(visit));
+      const result = await redis.lpush('visits', JSON.stringify(visit));
       await redis.ltrim('visits', 0, 999);
       
-      return res.status(200).json({ success: true });
+      console.log('Visit recorded, total count in list:', result);
+      return res.status(200).json({ success: true, count: result });
     }
 
     if (req.method === 'GET') {
@@ -48,9 +62,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
     return res.status(500).json({ 
       error: 'Redis Operation Failed', 
       message: error.message,
-      stack: error.stack 
+      code: error.code
     });
   } finally {
+    // We should be careful about quitting too early in serverless, 
+    // but for ioredis in Vercel it's generally safer to close or use a global client.
     await redis.quit();
   }
 }

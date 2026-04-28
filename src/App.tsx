@@ -25,12 +25,19 @@ function App() {
       }
       
       try {
-        await fetch('https://adminpage-xi.vercel.app/api/track', {
+        const response = await fetch('/api/track', {
           method: 'POST',
-          body: JSON.stringify({ ...newVisit, site_id: 'ipwon' })
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(newVisit)
         });
+        const result = await response.json();
+        if (response.ok) {
+          console.log('Tracking success:', result);
+        } else {
+          console.error('Tracking server error:', result);
+        }
       } catch (error) {
-        console.error('Tracking request failed:', error);
+        console.error('Tracking request failed (network error):', error);
       }
     }
     
