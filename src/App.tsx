@@ -25,10 +25,9 @@ function App() {
       }
       
       try {
-        await fetch('/api/track', {
+        await fetch('https://adminpage-xi.vercel.app/api/track', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(newVisit)
+          body: JSON.stringify({ ...newVisit, site_id: 'ipwon' })
         });
       } catch (error) {
         console.error('Tracking request failed:', error);
