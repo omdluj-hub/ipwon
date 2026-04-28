@@ -10,11 +10,7 @@ function App() {
   useEffect(() => {
     // Traffic tracking logic
     const trackVisit = async () => {
-      // Don't track if user is already authenticated as admin
-      if (sessionStorage.getItem('admin_auth') === 'true') {
-        return
-      }
-      
+      const isAdmin = sessionStorage.getItem('admin_auth') === 'true'
       const referrer = document.referrer || 'Direct'
       const urlParams = new URLSearchParams(window.location.search)
       const utmSource = urlParams.get('utm_source') || 'None'
@@ -24,7 +20,8 @@ function App() {
         referrer,
         utmSource,
         path: location.pathname,
-        userAgent: navigator.userAgent
+        userAgent: navigator.userAgent,
+        isAdmin
       }
       
       try {

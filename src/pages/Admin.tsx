@@ -7,6 +7,7 @@ interface Visit {
   utmSource: string
   path: string
   userAgent?: string
+  isAdmin?: boolean
 }
 
 const getBotInfo = (ua?: string) => {
@@ -237,14 +238,14 @@ function Admin() {
                 return (
                   <tr key={index} style={{ 
                     borderBottom: '1px solid #f5f5f5',
-                    backgroundColor: botInfo.isBot ? '#f0f7ff' : 'transparent'
+                    backgroundColor: visit.isAdmin ? '#fffbe6' : (botInfo.isBot ? '#f0f7ff' : 'transparent')
                   }}>
                     <td style={{ padding: '14px 16px', fontSize: '14px', color: '#666' }}>{new Date(visit.timestamp).toLocaleString()}</td>
                     <td style={{ padding: '14px 16px', fontSize: '14px', color: '#007bff', fontWeight: 'bold' }}>{visit.path || '/'}</td>
                     <td style={{ padding: '14px 16px', fontSize: '14px', color: '#444' }}>{visit.referrer}</td>
                     <td style={{ padding: '14px 16px', fontSize: '14px', color: '#444' }}>{visit.utmSource}</td>
-                    <td style={{ padding: '14px 16px', fontSize: '14px', color: botInfo.isBot ? '#007bff' : '#444', fontWeight: botInfo.isBot ? 'bold' : 'normal' }}>
-                      {botInfo.name}
+                    <td style={{ padding: '14px 16px', fontSize: '14px', color: botInfo.isBot ? '#007bff' : '#444', fontWeight: (botInfo.isBot || visit.isAdmin) ? 'bold' : 'normal' }}>
+                      {botInfo.name} {visit.isAdmin && <span style={{ marginLeft: '8px', padding: '2px 6px', background: '#faad14', color: '#fff', borderRadius: '4px', fontSize: '10px' }}>관리자</span>}
                     </td>
                   </tr>
                 )
